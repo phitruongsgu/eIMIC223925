@@ -8,7 +8,7 @@ namespace eIMIC223925.DATA.Entities
     {
         public int Id { set; get; }
         public DateTime OrderDate { set; get; }
-        public Guid UserId { set; get; }
+
         public string ShipName { set; get; }
         public string ShipAddress { set; get; }
         public string ShipEmail { set; get; }
@@ -16,5 +16,8 @@ namespace eIMIC223925.DATA.Entities
 
         public OrderStatus Status { set; get; }
         public List<OrderDetail> OrderDetails { get; set; }
+
+        public Guid UserId { set; get; }
+        public AppUser AppUser { get; set; } // do nó có liên kết bên class AppUser
     }
 }

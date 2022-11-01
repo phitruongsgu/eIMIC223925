@@ -15,5 +15,8 @@ namespace eIMIC223925.DATA.Entities
         public string Provider { set; get; }
 
         public TransactionStatus Status { set; get; }
+
+        public Guid UserId { get; set; }
+        public AppUser AppUser { get; set; } // do nó có liên kết bên class AppUser
     }
 }
