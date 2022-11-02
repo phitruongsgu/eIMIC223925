@@ -1,7 +1,6 @@
 ﻿using eIMIC223925.DATA.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace eIMIC223925.DATA.Configurations
 {
@@ -15,7 +14,7 @@ namespace eIMIC223925.DATA.Configurations
 
             builder.Property(x => x.Id).UseIdentityColumn();
 
-            builder.Property(x => x.OrderDate).HasDefaultValue(DateTime.Now);
+            //builder.Property(x => x.OrderDate).HasDefaultValue(DateTime.Now);
 
             builder.Property(x => x.ShipEmail).IsRequired().IsUnicode(false).HasMaxLength(50);
 
