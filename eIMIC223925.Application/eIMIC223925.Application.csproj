@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\eIMIC223925.DATA\eIMIC223925.DATA.csproj" />
+    <ProjectReference Include="..\eIMIC223925.Utilities\eIMIC223925.Utilities.csproj" />
     <ProjectReference Include="..\eIMIC223925.ViewModels\eIMIC223925.ViewModels.csproj" />
   </ItemGroup>
 
