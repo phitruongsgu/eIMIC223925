@@ -2,9 +2,8 @@
 
 namespace eIMIC223925.ViewModels.Common
 {
-    public class PagedResult<T>
+    public class PagedResult<T> : PagedResultBase
     {
-        public int TotalRecord { set; get; }
         public List<T> Items { set; get; }
     }
 }
