@@ -19,7 +19,7 @@ namespace eIMIC223925.BackendAPI.Controllers
 
         [HttpPost("authenticate")]
         [AllowAnonymous]
-        public async Task<IActionResult> Authenticate([FromForm] LoginRequest request)
+        public async Task<IActionResult> Authenticate([FromBody] LoginRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -35,7 +35,7 @@ namespace eIMIC223925.BackendAPI.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromForm] RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -50,7 +50,7 @@ namespace eIMIC223925.BackendAPI.Controllers
 
         //PUT: http://localhost/api/users/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromForm] UserUpdateRequest request)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UserUpdateRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
