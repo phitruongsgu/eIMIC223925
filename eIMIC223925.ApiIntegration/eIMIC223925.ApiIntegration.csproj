@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\eIMIC223925.BackendAPI\eIMIC223925.BackendAPI.csproj" />
+    <ProjectReference Include="..\eIMIC223925.Utilities\eIMIC223925.Utilities.csproj" />
+    <ProjectReference Include="..\eIMIC223925.ViewModels\eIMIC223925.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>
