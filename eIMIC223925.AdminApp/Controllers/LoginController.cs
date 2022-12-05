@@ -1,4 +1,5 @@
 ﻿using eIMIC223925.ApiIntegration;
+using eIMIC223925.Utilities.Constants;
 using eIMIC223925.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -31,6 +32,7 @@ namespace eIMIC223925.AdminApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            ViewData["Title"] = "Đăng nhập hệ thống Admin";
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return View();
         }
@@ -40,7 +42,7 @@ namespace eIMIC223925.AdminApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(ModelState);
+                return View();
             }
 
             var result = await _userApiClient.Authenticate(request);
@@ -58,6 +60,8 @@ namespace eIMIC223925.AdminApp.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = false
             };
+
+            HttpContext.Session.SetString(SystemConstants.AppSettings.Token, result.ResultObj);
 
             await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
