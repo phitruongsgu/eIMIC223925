@@ -7,5 +7,7 @@ namespace eIMIC223925.ApiIntegration
     public interface IUserApiClient
     {
         Task<ApiResult<string>> Authenticate(LoginRequest request);
+        Task<ApiResult<PagedResult<UserVm>>> GetUsersPagings(GetUserPagingRequest request);
+        Task<ApiResult<bool>> RegisterUser(RegisterRequest request);
     }
 }

@@ -33,12 +33,12 @@ namespace eIMIC223925.Application.System.Users
             var user = await _userManager.FindByNameAsync(request.UserName);
             if (user == null)
             {
-                return null;
+                return new ApiErrorResult<string>("Tài khoản không tồn tại");
             }
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
             if (!result.Succeeded)
             {
-                return new ApiErrorResult<string>("Đăng nhập không đúng");
+                return new ApiErrorResult<string>("Mật khẩu nhập không đúng");
             }
 
             var roles = await _userManager.GetRolesAsync(user);
