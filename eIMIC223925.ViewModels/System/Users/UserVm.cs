@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace eIMIC223925.ViewModels.System.Users
 {
@@ -26,5 +25,7 @@ namespace eIMIC223925.ViewModels.System.Users
 
         [Display(Name = "Ngày sinh")]
         public DateTime Dob { get; set; }
+
+        public IList<string> Roles { get; set; }
     }
 }

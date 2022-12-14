@@ -122,7 +122,7 @@ namespace eIMIC223925.Application.Catalog.Products
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<ProductViewModel>> GetAllByCategoryId(string languageId, GetPublicProductPagingRequest request)
+        public async Task<PagedResult<ProductVm>> GetAllByCategoryId(string languageId, GetPublicProductPagingRequest request)
         {
             //1. Select join
             var query = from p in _context.Products
@@ -141,7 +141,7 @@ namespace eIMIC223925.Application.Catalog.Products
 
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .Select(x => new ProductViewModel()
+                .Select(x => new ProductVm()
                 {
                     Id = x.p.Id,
                     Name = x.pt.Name,
@@ -159,7 +159,7 @@ namespace eIMIC223925.Application.Catalog.Products
                 }).ToListAsync();
 
             //4. Select and projection
-            var pagedResult = new PagedResult<ProductViewModel>()
+            var pagedResult = new PagedResult<ProductVm>()
             {
                 TotalRecords = totalRow,
                 Items = data
@@ -167,34 +167,41 @@ namespace eIMIC223925.Application.Catalog.Products
             return pagedResult;
         }
 
-        public async Task<PagedResult<ProductViewModel>> GetAllPaging(GetManageProductPagingRequest request)
+        public async Task<PagedResult<ProductVm>> GetAllPaging(GetManageProductPagingRequest request)
         {
             //1. Select join
             var query = from p in _context.Products
                         join pt in _context.ProductTranslations on p.Id equals pt.ProductId
-                        join pic in _context.ProductInCategories on p.Id equals pic.ProductId
-                        join c in _context.Categories on pic.CategoryId equals c.Id
-                        select new { p, pt, pic };
+                        join pic in _context.ProductInCategories on p.Id equals pic.ProductId into ppic
+                        from pic in ppic.DefaultIfEmpty()
+                        join c in _context.Categories on pic.CategoryId equals c.Id into picc
+                        from c in picc.DefaultIfEmpty()
+                        join pi in _context.ProductImages on p.Id equals pi.ProductId into ppi
+                        from pi in ppi.DefaultIfEmpty()
+                        where pt.LanguageId == request.LanguageId && pi.IsDefault == true
+                        select new { p, pt, pic, pi };
             //2. filter
             if (!string.IsNullOrEmpty(request.Keyword))
-                query = query.Where(x => x.pt.Name.Contains(request.Keyword));
-
-            if (request.CategoryIds.Count > 0)
             {
-                query = query.Where(p => request.CategoryIds.Contains(p.pic.CategoryId));
+                query = query.Where(x => x.pt.Name.Contains(request.Keyword));
+            }
+
+            if (request.CategoryId != null && request.CategoryId != 0)
+            {
+                query = query.Where(p => p.pic.CategoryId == request.CategoryId);
             }
             //3. Paging
             int totalRow = await query.CountAsync(); // bao nhiêu sp tương ứng
-            // ví dụ có 59 dòng, quy định 1 trang 10 dòng
+            // ví dụ có 59 sản phẩm, quy định 1 trang có 10 sản phẩm
             // 0-9, 10-19, 20-29, 30-39, 40-49, 50-59
-            // => 6 trang, trang cuối (thứ 6) sẽ có 9 dòng
+            // => 6 trang, trang cuối (thứ 6) sẽ có 9 sản phẩm
 
 
-            // ví dụ lấy trang đầu tiên từ dòng số 0:
-            // (1-1) * 10 = 0
-            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
-                .Take(request.PageSize) // số dòng (10 dòng dữ liệu)
-                .Select(x => new ProductViewModel()
+            // ví dụ lấy trang thứ 2:
+            // (2-1) * 10 = 10
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize) // bỏ qua 10 phần tử ở trang 1
+                .Take(request.PageSize) // lấy 10 sản phẩm trong trang thứ 2 hiển thị ra
+                .Select(x => new ProductVm()
                 {
                     Id = x.p.Id,
                     Name = x.pt.Name,
@@ -208,19 +215,22 @@ namespace eIMIC223925.Application.Catalog.Products
                     SeoDescription = x.pt.SeoDescription,
                     SeoTitle = x.pt.SeoTitle,
                     Stock = x.p.Stock,
-                    ViewCount = x.p.ViewCount
+                    ViewCount = x.p.ViewCount,
+                    ThumbnailImage = x.pi.ImagePath
                 }).ToListAsync();
 
             //4. Select and projection
-            var pagedResult = new PagedResult<ProductViewModel>()
+            var pagedResult = new PagedResult<ProductVm>()
             {
                 TotalRecords = totalRow,
+                PageSize = request.PageSize,
+                PageIndex = request.PageIndex,
                 Items = data
             };
             return pagedResult;
         }
 
-        public async Task<ProductViewModel> GetById(int productId, string languageId)
+        public async Task<ProductVm> GetById(int productId, string languageId)
         {
             var product = await _context.Products.FindAsync(productId);
             var productTranslation = await _context.ProductTranslations.FirstOrDefaultAsync(x => x.ProductId == productId
@@ -231,7 +241,7 @@ namespace eIMIC223925.Application.Catalog.Products
                 throw new eIMIC223925Exception($"Cannot find a product with id: {productId}");
             }
 
-            var productViewModel = new ProductViewModel() // ProductViewModel là những gì hiển thị lên web
+            var productViewModel = new ProductVm() // ProductViewModel là những gì hiển thị lên web
             {
                 Id = product.Id,
                 DateCreated = product.DateCreated,
@@ -373,7 +383,7 @@ namespace eIMIC223925.Application.Catalog.Products
         }
 
 
-        public async Task<List<ProductViewModel>> GetAll()//string languageId)
+        public async Task<List<ProductVm>> GetAll()//string languageId)
         {
             //1. Select join
             var query = from p in _context.Products
@@ -384,7 +394,7 @@ namespace eIMIC223925.Application.Catalog.Products
                         select new { p, pt, pic };
 
 
-            var data = await query.Select(x => new ProductViewModel()
+            var data = await query.Select(x => new ProductVm()
             {
                 Id = x.p.Id,
                 Name = x.pt.Name,

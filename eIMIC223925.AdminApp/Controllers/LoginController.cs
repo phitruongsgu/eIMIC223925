@@ -60,6 +60,8 @@ namespace eIMIC223925.AdminApp.Controllers
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = false
             };
+            // thêm ngôn ngữ mặc định cho hệ thống:
+            HttpContext.Session.SetString(SystemConstants.AppSettings.DefaultLanguageId, _configuration[SystemConstants.AppSettings.DefaultLanguageId]);
 
             HttpContext.Session.SetString(SystemConstants.AppSettings.Token, result.ResultObj);
 

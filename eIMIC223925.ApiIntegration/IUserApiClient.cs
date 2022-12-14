@@ -13,5 +13,6 @@ namespace eIMIC223925.ApiIntegration
         Task<ApiResult<UserVm>> GetById(Guid Id);
         Task<ApiResult<bool>> UpdateUser(Guid Id, UserUpdateRequest request);
         Task<ApiResult<bool>> Delete(Guid id);
+        Task<ApiResult<bool>> RoleAssign(Guid id, RoleAssignRequest request);
     }
 }
