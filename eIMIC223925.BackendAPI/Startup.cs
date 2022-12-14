@@ -1,5 +1,7 @@
 using eIMIC223925.Application.Catalog.Products;
 using eIMIC223925.Application.Common;
+using eIMIC223925.Application.System.Languages;
+using eIMIC223925.Application.System.Roles;
 using eIMIC223925.Application.System.Users;
 using eIMIC223925.DATA.EF;
 using eIMIC223925.DATA.Entities;
@@ -45,12 +47,14 @@ namespace eIMIC223925.BackendAPI
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
+            services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ILanguageService, LanguageService>();
+
 
             services.AddControllers()
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
 
-            //services.AddControllersWithViews();
 
             services.AddSwaggerGen(c =>
             {

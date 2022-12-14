@@ -31,9 +31,9 @@ namespace eIMIC223925.BackendAPI.Controllers
 
 
         [HttpGet("{languageId}")]
-        public async Task<IActionResult> GetAllPaging(string languageId, [FromQuery] GetPublicProductPagingRequest request)
+        public async Task<IActionResult> GetAllPaging(string languageId, [FromQuery] GetManageProductPagingRequest request)
         {
-            var products = await _productService.GetAllByCategoryId(languageId, request);
+            var products = await _productService.GetAllPaging(request);
             return Ok(products);
         }
 
