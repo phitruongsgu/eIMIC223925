@@ -1,3 +1,4 @@
+using eIMIC223925.Application.Catalog.Categories;
 using eIMIC223925.Application.Catalog.Products;
 using eIMIC223925.Application.Common;
 using eIMIC223925.Application.System.Languages;
@@ -44,6 +45,7 @@ namespace eIMIC223925.BackendAPI
             //Declare DI
             services.AddTransient<IStorageService, FileStorageService>();
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();

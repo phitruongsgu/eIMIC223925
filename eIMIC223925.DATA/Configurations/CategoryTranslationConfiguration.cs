@@ -24,10 +24,10 @@ namespace eIMIC223925.DATA.Configurations
 
             builder.Property(x => x.LanguageId).IsUnicode(false).IsRequired().HasMaxLength(5); // IsUnicode = false tức ở SQL Server nó là kiểu varchar, nếu = true (mặc định) thì nó là kiểu nvarchar (tức cho gõ dấu Tiếng Việt dc)
 
-            builder.HasOne(x => x.Category).WithMany(x => x.CategoryTranslations).HasForeignKey(x => x.CategoryId);
+
             builder.HasOne(x => x.Language).WithMany(x => x.CategoryTranslations).HasForeignKey(x => x.LanguageId);
 
-
+            builder.HasOne(x => x.Category).WithMany(x => x.CategoryTranslations).HasForeignKey(x => x.CategoryId);
         }
     }
 }
