@@ -1,6 +1,7 @@
 ﻿using eIMIC223925.Application.Common;
 using eIMIC223925.DATA.EF;
 using eIMIC223925.DATA.Entities;
+using eIMIC223925.Utilities.Constants;
 using eIMIC223925.Utilities.Exceptions;
 using eIMIC223925.ViewModels.Catalog.ProductImages;
 using eIMIC223925.ViewModels.Catalog.Products;
@@ -56,17 +57,13 @@ namespace eIMIC223925.Application.Catalog.Products
 
         public async Task<int> Create(ProductCreateRequest request)
         {
-            //1. Prepare object
-            var product = new Product()
+            var languages = _context.Languages;
+            var translations = new List<ProductTranslation>();
+            foreach (var language in languages)
             {
-                Price = request.Price,
-                OriginalPrice = request.OriginalPrice,
-                Stock = request.Stock,
-                ViewCount = 0,
-                DateCreated = DateTime.Now,
-                ProductTranslations = new List<ProductTranslation>() // list là 1 danh sách động, k cần cấp phát phần tử trước, có thể thêm xoá phần tử
+                if (language.Id == request.LanguageId)
                 {
-                    new ProductTranslation()
+                    translations.Add(new ProductTranslation()
                     {
                         Name = request.Name,
                         Description = request.Description,
@@ -75,17 +72,36 @@ namespace eIMIC223925.Application.Catalog.Products
                         SeoAlias = request.SeoAlias,
                         SeoTitle = request.SeoTitle,
                         LanguageId = request.LanguageId
-                    }
+                    });
                 }
+                else
+                {
+                    translations.Add(new ProductTranslation()
+                    {
+                        Name = SystemConstants.ProductConstants.NA,
+                        Description = SystemConstants.ProductConstants.NA,
+                        SeoAlias = SystemConstants.ProductConstants.NA,
+                        LanguageId = language.Id
+                    });
+                }
+            }
+            var product = new Product()
+            {
+                Price = request.Price,
+                OriginalPrice = request.OriginalPrice,
+                Stock = request.Stock,
+                ViewCount = 0,
+                DateCreated = DateTime.Now,
+                ProductTranslations = translations
             };
-            //2. Save Image product
-            if (request.ThumbnailImage != null) // có hình
+            //Save image
+            if (request.ThumbnailImage != null)
             {
                 product.ProductImages = new List<ProductImage>()
                 {
                     new ProductImage()
                     {
-                        Caption = "Thumbnail image", // nếu ảnh k load dc trên website, thì chữ này hiện ra
+                        Caption = "Thumbnail image",
                         DateCreated = DateTime.Now,
                         FileSize = request.ThumbnailImage.Length,
                         ImagePath = await this.SaveFile(request.ThumbnailImage),
@@ -94,8 +110,6 @@ namespace eIMIC223925.Application.Catalog.Products
                     }
                 };
             }
-            //3. Save product
-
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
             return product.Id;

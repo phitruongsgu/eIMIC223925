@@ -27,10 +27,14 @@ namespace eIMIC223925.ApiIntegration
 
         protected async Task<TResponse> GetAsync<TResponse>(string url)
         {
+            var sessions = _httpContextAccessor
+                .HttpContext
+                .Session
+                .GetString(SystemConstants.AppSettings.Token);
+
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
-            var session = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.Token);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", session);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
             var response = await client.GetAsync(url);
             var result = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
@@ -40,7 +44,6 @@ namespace eIMIC223925.ApiIntegration
 
                 return myDeserializedObjList;
             }
-
             return JsonConvert.DeserializeObject<TResponse>(result);
 
         }

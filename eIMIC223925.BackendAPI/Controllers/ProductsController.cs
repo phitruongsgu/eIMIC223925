@@ -49,8 +49,14 @@ namespace eIMIC223925.BackendAPI.Controllers
         }
 
         [HttpPost]
+        [Consumes("multipart/form-data")]
+        [Authorize]
         public async Task<IActionResult> Create([FromForm] ProductCreateRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             var productId = await _productService.Create(request);
 
@@ -65,12 +71,16 @@ namespace eIMIC223925.BackendAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromForm] ProductUpdateRequest request)
+        [Consumes("multipart/form-data")]
+        [Authorize]
+        public async Task<IActionResult> Update([FromRoute] int productId, [FromForm] ProductUpdateRequest request)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            request.Id = productId;
             var affectedResult = await _productService.Update(request);
             if (affectedResult == 0) // do cái service Update bên ProductService nó trả về kiểu int
             {
