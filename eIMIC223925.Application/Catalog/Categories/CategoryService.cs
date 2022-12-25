@@ -1,4 +1,7 @@
 ﻿using eIMIC223925.DATA.EF;
+using eIMIC223925.DATA.Entities;
+using eIMIC223925.DATA.Enum;
+using eIMIC223925.Utilities.Constants;
 using eIMIC223925.ViewModels.Catalog.Categories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -42,6 +45,46 @@ namespace eIMIC223925.Application.Catalog.Categories
                 Name = x.ct.Name,
                 ParentId = x.c.ParentId
             }).FirstOrDefaultAsync();
+        }
+
+        public async Task<int> Create(CategoryCreateRequest request)
+        {
+            var languages = _context.Languages;
+            var translations = new List<CategoryTranslation>();
+            foreach (var language in languages)
+            {
+                if (language.Id == request.LanguageId)
+                {
+                    translations.Add(new CategoryTranslation()
+                    {
+                        Name = request.Name,
+                        SeoDescription = request.SeoDescription,
+                        SeoAlias = request.SeoAlias,
+                        SeoTitle = request.SeoTitle,
+                        LanguageId = request.LanguageId
+                    });
+                }
+                else
+                {
+                    translations.Add(new CategoryTranslation()
+                    {
+                        Name = SystemConstants.ProductConstants.NA,
+                        SeoAlias = SystemConstants.ProductConstants.NA,
+                        LanguageId = language.Id
+                    });
+                }
+            }
+            var category = new Category()
+            {
+                SortOrder = request.SortOrder,
+                IsShowOnHome = request.IsShowOnHome,
+                ParentId = request.ParentId,
+                Status = Status.InActive,
+                CategoryTranslations = translations
+            };
+            _context.Categories.Add(category);
+            await _context.SaveChangesAsync();
+            return category.Id;
         }
     }
 }

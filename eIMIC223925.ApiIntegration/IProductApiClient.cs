@@ -13,7 +13,7 @@ namespace eIMIC223925.ApiIntegration
 
         Task<bool> UpdateProduct(ProductUpdateRequest request);
 
-        //Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request);
+        Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request);
 
         Task<ProductVm> GetById(int id, string languageId);
 

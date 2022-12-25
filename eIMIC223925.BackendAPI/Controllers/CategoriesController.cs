@@ -1,4 +1,6 @@
 ﻿using eIMIC223925.Application.Catalog.Categories;
+using eIMIC223925.ViewModels.Catalog.Categories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -18,8 +20,8 @@ namespace eIMIC223925.BackendAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll(string languageId)
         {
-            var products = await _categoryService.GetAll(languageId);
-            return Ok(products);
+            var category = await _categoryService.GetAll(languageId);
+            return Ok(category);
         }
 
         [HttpGet("{id}/{languageId}")]
@@ -27,6 +29,28 @@ namespace eIMIC223925.BackendAPI.Controllers
         {
             var category = await _categoryService.GetById(languageId, id);
             return Ok(category);
+        }
+
+        [HttpPost]
+        [Consumes("multipart/form-data")]
+        [Authorize]
+        public async Task<IActionResult> Create([FromForm] CategoryCreateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var categoryId = await _categoryService.Create(request);
+
+            if (categoryId == 0)
+            {
+                return BadRequest();
+            }
+
+            var category = await _categoryService.GetById(request.LanguageId, categoryId);
+
+            return CreatedAtAction(nameof(GetById), new { id = categoryId }, category);
         }
     }
 }

@@ -9,5 +9,7 @@ namespace eIMIC223925.ApiIntegration
         Task<List<CategoryVm>> GetAll(string languageId);
 
         Task<CategoryVm> GetById(string languageId, int id);
+
+        Task<bool> CreateCategory(CategoryCreateRequest request);
     }
 }
