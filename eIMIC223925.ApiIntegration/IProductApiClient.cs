@@ -1,4 +1,5 @@
-﻿using eIMIC223925.ViewModels.Catalog.Products;
+﻿using eIMIC223925.ViewModels.Catalog.ProductImages;
+using eIMIC223925.ViewModels.Catalog.Products;
 using eIMIC223925.ViewModels.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,5 +23,7 @@ namespace eIMIC223925.ApiIntegration
         Task<List<ProductVm>> GetLatestProducts(string languageId, int take);
 
         Task<bool> DeleteProduct(int id);
+
+        Task<ProductImageViewModel> GetImageById(int productId, int imageId);
     }
 }

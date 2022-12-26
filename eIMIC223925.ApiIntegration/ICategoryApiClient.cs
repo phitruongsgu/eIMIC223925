@@ -11,5 +11,9 @@ namespace eIMIC223925.ApiIntegration
         Task<CategoryVm> GetById(string languageId, int id);
 
         Task<bool> CreateCategory(CategoryCreateRequest request);
+
+        Task<bool> DeleteCategory(int id);
+
+        Task<bool> UpdateCategory(CategoryUpdateRequest request);
     }
 }

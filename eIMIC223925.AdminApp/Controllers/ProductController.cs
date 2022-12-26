@@ -1,5 +1,6 @@
 ﻿using eIMIC223925.ApiIntegration;
 using eIMIC223925.Utilities.Constants;
+using eIMIC223925.ViewModels.Catalog.ProductImages;
 using eIMIC223925.ViewModels.Catalog.Products;
 using eIMIC223925.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
@@ -16,8 +17,6 @@ namespace eIMIC223925.AdminApp.Controllers
         private readonly IProductApiClient _productApiClient;
         private readonly IConfiguration _configuration;
         private readonly ICategoryApiClient _categoryApiClient;
-
-        //private readonly ICategoryApiClient _categoryApiClient;
 
         public ProductController(IProductApiClient productApiClient,
             IConfiguration configuration,
@@ -204,6 +203,24 @@ namespace eIMIC223925.AdminApp.Controllers
             return categoryAssignRequest;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Details(int id, ProductImageViewModel pivm)
+        {
+            // thêm ngôn ngữ để nó có khi chạy vào GetById ở dưới
+            var languageId = HttpContext.Session.GetString(SystemConstants.AppSettings.DefaultLanguageId);
+            var result = await _productApiClient.GetById(id, languageId);
 
+
+            //pivm.ProductId = result.Id;
+            //if (pivm.ProductId == id)
+            //{
+            //    var productImage = await _productApiClient.GetImageById(pivm.ProductId, pivm.Id);
+            //    ViewBag.productImage = productImage;
+            //}
+
+
+
+            return View(result);
+        }
     }
 }

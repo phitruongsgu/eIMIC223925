@@ -48,6 +48,9 @@ namespace eIMIC223925.AdminApp
 
 
 
+
+
+
             IMvcBuilder builder = services.AddRazorPages();
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"); // bên launchSettings.json
 
