@@ -19,5 +19,6 @@ namespace eIMIC223925.ViewModels.Catalog.ProductImages
         public int SortOrder { get; set; }
 
         public long FileSize { get; set; }
+
     }
 }

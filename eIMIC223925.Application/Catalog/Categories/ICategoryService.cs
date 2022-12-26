@@ -11,5 +11,9 @@ namespace eIMIC223925.Application.Catalog.Categories
         Task<CategoryVm> GetById(string languageId, int id);
 
         Task<int> Create(CategoryCreateRequest request);
+
+        Task<int> Delete(int categoryId);
+
+        Task<int> Update(CategoryUpdateRequest request);
     }
 }

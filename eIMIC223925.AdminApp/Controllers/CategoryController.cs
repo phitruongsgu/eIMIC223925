@@ -55,5 +55,79 @@ namespace eIMIC223925.AdminApp.Controllers
             ModelState.AddModelError("", "Thêm mới loại sản phẩm thất bại");
             return View(request);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            // thêm ngôn ngữ để nó có khi chạy vào GetById ở dưới
+            var languageId = HttpContext.Session.GetString(SystemConstants.AppSettings.DefaultLanguageId);
+            var result = await _categoryApiClient.GetById(languageId, id);
+
+            return View(result);
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            return View(new CategoryDeleteRequest()
+            {
+                Id = id
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(CategoryDeleteRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var result = await _categoryApiClient.DeleteCategory(request.Id);
+            if (result)
+            {
+                TempData["result"] = "Xóa thể loại thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", "Xóa không thành công");
+            return View(request);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var languageId = HttpContext.Session.GetString(SystemConstants.AppSettings.DefaultLanguageId);
+
+            var category = await _categoryApiClient.GetById(languageId, id);
+            var editVm = new CategoryUpdateRequest()
+            {
+                Id = category.Id,
+                Name = category.Name,
+                SeoAlias = category.SeoAlias,
+                SeoDescription = category.SeoDescription,
+                SeoTitle = category.SeoTitle
+            };
+            return View(editVm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromForm] CategoryUpdateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            var result = await _categoryApiClient.UpdateCategory(request);
+            if (result)
+            {
+                TempData["result"] = "Cập nhật thể loại thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", "Cập nhật thể loại thất bại");
+            return View(request);
+        }
     }
 }
