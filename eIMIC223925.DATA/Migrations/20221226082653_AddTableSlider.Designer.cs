@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eIMIC223925.DATA.EF;
 
 namespace eIMIC223925.DATA.Migrations
 {
     [DbContext(typeof(EIMIC223925DbContext))]
-    partial class EIMIC223925DbContextModelSnapshot : ModelSnapshot
+    [Migration("20221226082653_AddTableSlider")]
+    partial class AddTableSlider
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

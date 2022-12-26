@@ -1,5 +1,6 @@
 using eIMIC223925.Application.Catalog.Categories;
 using eIMIC223925.Application.Catalog.Products;
+using eIMIC223925.Application.Catalog.Slides;
 using eIMIC223925.Application.Common;
 using eIMIC223925.Application.System.Languages;
 using eIMIC223925.Application.System.Roles;
@@ -49,9 +50,13 @@ namespace eIMIC223925.BackendAPI
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
+
+            services.AddTransient<ILanguageService, LanguageService>();
+            services.AddTransient<ISlideService, SlideService>();
+
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ILanguageService, LanguageService>();
+
 
 
             services.AddControllers()
