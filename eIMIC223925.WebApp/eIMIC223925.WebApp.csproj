@@ -8,4 +8,8 @@
     <Folder Include="wwwroot\themes\less\oregional\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\eIMIC223925.ApiIntegration\eIMIC223925.ApiIntegration.csproj" />
+  </ItemGroup>
+
 </Project>
