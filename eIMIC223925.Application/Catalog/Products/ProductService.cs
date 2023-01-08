@@ -374,7 +374,7 @@ namespace eIMIC223925.Application.Catalog.Products
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdatePrice(int productId, decimal newPrice)
+        public async Task<bool> UpdatePrice(int productId, decimal newPrice) // Price là decimal
         {
             var product = await _context.Products.FindAsync(productId);
             if (product == null)

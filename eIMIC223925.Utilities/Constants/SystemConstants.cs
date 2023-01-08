@@ -3,6 +3,7 @@
     public class SystemConstants
     {
         public const string MainConnectionString = "eIMIC223925Db";
+        public const string CartSession = "CartSession";
 
         public class AppSettings
         {
@@ -14,6 +15,12 @@
         public class ProductConstants
         {
             public const string NA = "N/A";
+        }
+
+        public class ProductSettings
+        {
+            public const int NumberOfFeaturedProducts = 4;
+            public const int NumberOfLatestProducts = 6;
         }
     }
 }

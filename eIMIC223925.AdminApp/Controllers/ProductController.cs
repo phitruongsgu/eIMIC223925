@@ -222,5 +222,71 @@ namespace eIMIC223925.AdminApp.Controllers
 
             return View(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditPrice(int id)
+        {
+            var languageId = HttpContext.Session.GetString(SystemConstants.AppSettings.DefaultLanguageId);
+
+            var product = await _productApiClient.GetById(id, languageId);
+            var editVm = new ProductUpdatePriceRequest()
+            {
+                Id = product.Id,
+                Price = product.Price,
+            };
+            return View(editVm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPrice(ProductUpdatePriceRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            var result = await _productApiClient.UpdatePrice(request.Id, request.Price);
+            if (result)
+            {
+                TempData["result"] = "Cập nhật giá sản phẩm thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", "Cập nhật giá sản phẩm thất bại");
+            return View(request);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditStock(int id)
+        {
+            var languageId = HttpContext.Session.GetString(SystemConstants.AppSettings.DefaultLanguageId);
+
+            var product = await _productApiClient.GetById(id, languageId);
+            var editVm = new ProductUpdateStockRequest()
+            {
+                Id = product.Id,
+                Stock = product.Stock
+            };
+            return View(editVm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditStock(ProductUpdateStockRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            var result = await _productApiClient.UpdateStock(request.Id, request.Stock);
+            if (result)
+            {
+                TempData["result"] = "Cập nhật số lượng sản phẩm thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", "Cập nhật số lượng sản phẩm thất bại");
+            return View(request);
+        }
     }
 }

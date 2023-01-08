@@ -25,5 +25,9 @@ namespace eIMIC223925.ApiIntegration
         Task<bool> DeleteProduct(int id);
 
         Task<ProductImageViewModel> GetImageById(int productId, int imageId);
+
+        Task<bool> UpdatePrice(int id, decimal newPrice);
+
+        Task<bool> UpdateStock(int id, int addedQuantity);
     }
 }
