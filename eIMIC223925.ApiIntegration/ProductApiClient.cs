@@ -176,5 +176,49 @@ namespace eIMIC223925.ApiIntegration
             var data = await GetAsync<ProductImageViewModel>($"/api/products/{productId}/images/{imageId}");
             return data;
         }
+
+        public async Task<bool> UpdatePrice(int id, decimal newPrice)
+        {
+            var sessions = _httpContextAccessor
+            .HttpContext
+            .Session
+            .GetString(SystemConstants.AppSettings.Token);
+
+            var languageId = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.DefaultLanguageId);
+
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+
+            var requestContent = new MultipartFormDataContent();
+
+            requestContent.Add(new StringContent(newPrice.ToString()), "price");
+            requestContent.Add(new StringContent(languageId), "languageId");
+
+            var response = await client.PatchAsync($"/api/products/{id}/{newPrice}", requestContent);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> UpdateStock(int id, int addedQuantity)
+        {
+            var sessions = _httpContextAccessor
+            .HttpContext
+            .Session
+            .GetString(SystemConstants.AppSettings.Token);
+
+            var languageId = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.DefaultLanguageId);
+
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+
+            var requestContent = new MultipartFormDataContent();
+
+            requestContent.Add(new StringContent(addedQuantity.ToString()), "stock");
+            requestContent.Add(new StringContent(languageId), "languageId");
+
+            var response = await client.PostAsync($"/api/products/{id}/{addedQuantity}", requestContent);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

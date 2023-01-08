@@ -17,7 +17,7 @@
     },
     "eIMIC223925.BackendAPI": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger", // thêm dòng này vào để kích hoạt giao diện Swagger
       "applicationUrl": "https://localhost:5001",
       "environmentVariables": {

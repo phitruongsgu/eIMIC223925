@@ -90,9 +90,23 @@ namespace eIMIC223925.BackendAPI.Controllers
         }
 
         [HttpPatch("{productId}/{newPrice}")]
+        [Authorize]
         public async Task<IActionResult> UpdatePrice(int productId, decimal newPrice)
         {
             var isSuccessful = await _productService.UpdatePrice(productId, newPrice);
+            if (isSuccessful)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost("{productId}/{addedQuantity}")] // root POST cho khác với thằng UpdatePrice ở trên để tránh xung đột
+        [Authorize]
+        public async Task<IActionResult> UpdateStock(int productId, int addedQuantity)
+        {
+            var isSuccessful = await _productService.UpdateStock(productId, addedQuantity);
             if (isSuccessful)
             {
                 return Ok();
