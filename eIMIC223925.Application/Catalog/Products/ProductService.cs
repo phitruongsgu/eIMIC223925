@@ -250,6 +250,8 @@ namespace eIMIC223925.Application.Catalog.Products
             var productTranslation = await _context.ProductTranslations.FirstOrDefaultAsync(x => x.ProductId == productId
             && x.LanguageId == languageId);
 
+            var productImage = await _context.ProductImages.FirstOrDefaultAsync(x => x.ProductId == productId);
+
             if (product == null || productTranslation == null)
             {
                 throw new eIMIC223925Exception($"Cannot find a product with id: {productId}");
@@ -269,7 +271,9 @@ namespace eIMIC223925.Application.Catalog.Products
                 SeoDescription = productTranslation != null ? productTranslation.SeoDescription : null,
                 SeoTitle = productTranslation != null ? productTranslation.SeoTitle : null,
                 Stock = product.Stock,
-                ViewCount = product.ViewCount
+                ViewCount = product.ViewCount,
+                IdImage = productImage.Id, // tự thêm
+                ThumbnailImage = productImage.ImagePath // cập nhật dữ liệu trong ProductImage vào ProductVm
             };
             return productViewModel;
         }

@@ -6,6 +6,7 @@ namespace eIMIC223925.ViewModels.Catalog.Products
     public class ProductVm
     {
         public int Id { set; get; }
+        public int IdImage { set; get; }
         public decimal Price { set; get; }
         public decimal OriginalPrice { set; get; }
         public int Stock { set; get; }

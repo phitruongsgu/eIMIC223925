@@ -146,12 +146,16 @@ namespace eIMIC223925.BackendAPI.Controllers
         }
 
         [HttpPut("{productId}/images/{imageId}")]
-        public async Task<IActionResult> UpdateImage(int imageId, [FromForm] ProductImageUpdateRequest request)
+        [Consumes("multipart/form-data")]
+        [Authorize]
+        public async Task<IActionResult> UpdateImage(int productId, int imageId, [FromForm] ProductImageUpdateRequest request)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            request.ProductId = productId;
             var result = await _productService.UpdateImage(imageId, request);
             if (result == 0)
             {

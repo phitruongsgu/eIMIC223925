@@ -288,5 +288,42 @@ namespace eIMIC223925.AdminApp.Controllers
             ModelState.AddModelError("", "Cập nhật số lượng sản phẩm thất bại");
             return View(request);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateImage(int id)
+        {
+            var languageId = HttpContext.Session.GetString(SystemConstants.AppSettings.DefaultLanguageId);
+            var product = await _productApiClient.GetById(id, languageId);
+
+
+
+            var editVm = new ProductImageUpdateRequest()
+            {
+                ProductId = product.Id,
+                ImageId = product.IdImage,
+                ThumbnailImage = product.ThumbnailImage,
+            };
+            return View(editVm);
+        }
+
+        [HttpPost]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateImage([FromForm] ProductImageUpdateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            var result = await _productApiClient.UpdateImage(request);
+            if (result)
+            {
+                TempData["result"] = "Cập nhật ảnh sản phẩm thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", "Cập nhật ảnh sản phẩm thất bại");
+            return View(request);
+        }
     }
 }

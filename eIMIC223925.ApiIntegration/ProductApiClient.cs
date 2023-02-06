@@ -220,5 +220,41 @@ namespace eIMIC223925.ApiIntegration
             var response = await client.PostAsync($"/api/products/{id}/{addedQuantity}", requestContent);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> UpdateImage(ProductImageUpdateRequest request)
+        {
+
+
+            var sessions = _httpContextAccessor
+    .HttpContext
+    .Session
+    .GetString(SystemConstants.AppSettings.Token);
+
+            var languageId = _httpContextAccessor.HttpContext.Session.GetString(SystemConstants.AppSettings.DefaultLanguageId);
+
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+
+            var requestContent = new MultipartFormDataContent();
+
+            if (request.ImageFile != null)
+            {
+                byte[] data;
+                using (var br = new BinaryReader(request.ImageFile.OpenReadStream()))
+                {
+                    data = br.ReadBytes((int)request.ImageFile.OpenReadStream().Length);
+                }
+                ByteArrayContent bytes = new ByteArrayContent(data);
+                requestContent.Add(bytes, "imageFile", request.ImageFile.FileName);
+            }
+            requestContent.Add(new StringContent(request.ProductId.ToString()), "productId");
+            requestContent.Add(new StringContent(request.ImageId.ToString()), "imageId");
+
+            requestContent.Add(new StringContent(languageId), "languageId");
+
+            var response = await client.PutAsync($"/api/products/{request.ProductId}/images/{request.ImageId}", requestContent);
+            return response.IsSuccessStatusCode;
+        }
     }
 }
