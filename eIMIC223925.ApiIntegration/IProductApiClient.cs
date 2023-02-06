@@ -29,5 +29,7 @@ namespace eIMIC223925.ApiIntegration
         Task<bool> UpdatePrice(int id, decimal newPrice);
 
         Task<bool> UpdateStock(int id, int addedQuantity);
+
+        Task<bool> UpdateImage(ProductImageUpdateRequest request);
     }
 }

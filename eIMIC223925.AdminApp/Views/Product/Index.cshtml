@@ -1,5 +1,7 @@
 ﻿@model PagedResult<ProductVm>
 
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+
 @{ 
     ViewData["Title"] = "Danh sách sản phẩm";
     Layout = "~/Views/Shared/_Layout.cshtml"; 
@@ -58,12 +60,15 @@
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
-                        <tr class="table-dark">
+                        <tr class="table-dark text-center">
                             <th>
                                 Mã SP
                             </th>
                             <th>
                                 Tên
+                            </th>
+                            <th>
+                                Hình ảnh
                             </th>
                             <th>
                                 Giá nhập
@@ -75,18 +80,23 @@
                                 Số lượng tồn
                             </th>
 
-                            <th></th>
+                            <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model.Items)
                         {
-                            <tr>
+                            <tr class="text-center">
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Id)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    <img style="height:100px;width:100px" src="@(Configuration["BaseAddress"] + "/user-content/" +  item.ThumbnailImage)" alt="@item.Name" />
+                                    <br>
+                                    <a class="btn btn-sm btn-info" asp-controller="Product" asp-action="UpdateImage" asp-route-id="@item.Id">Sửa hình ảnh</a>
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.OriginalPrice)
@@ -101,7 +111,7 @@
                                     @Html.DisplayFor(modelItem => item.Stock)
                                     <br>
                                     @*@Html.ActionLink("Sửa số lượng", "EditStock", new { id = item.Id , stock = item.Stock })*@
-                                    <a class="btn btn-sm btn-info" asp-controller="Product" asp-action="EditStock" asp-route-id="@item.Id" asp-route-stock="@item.Stock">Sửa số lượng</a>
+                                    <a class="btn btn-sm btn-success" asp-controller="Product" asp-action="EditStock" asp-route-id="@item.Id" asp-route-stock="@item.Stock">Sửa số lượng</a>
                                 </td>
                                 <td>
 @*                                    @Html.ActionLink("Sửa", "Edit", new { id = item.Id }) |

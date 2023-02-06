@@ -1,0 +1,51 @@
+﻿@using eIMIC223925.ViewModels.Catalog.ProductImages;
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration;
+@model ProductImageUpdateRequest
+
+@{
+    ViewData["Title"] = "Cập nhật ảnh sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Cập nhật ảnh sản phẩm</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Cập nhật ảnh sản phẩm</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <a class="btn btn-success" asp-action="Index" asp-controller="Product">Về danh sách</a>
+        </div>
+
+        <div class="card-body">
+            <div class="col-md-8">
+                <form asp-action="UpdateImage" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+
+                        <input asp-for="ProductId" hidden class="form-control" />
+                      
+                    </div>
+
+                    <div class="form-group">
+
+                        <input asp-for="ImageId" hidden class="form-control" /> <!-- lấy id của ảnh sản phẩm-->
+
+                    </div>
+
+                    <div class="form-group">
+                        <img style="height:100px;width:100px" src="@(Configuration["BaseAddress"] + "/user-content/" +  Model.ThumbnailImage)" alt="@Model.Name" />
+
+                        <input asp-for="ImageFile" type="file" class="form-control" />
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Cập nhật ảnh" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
